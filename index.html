@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coasters Tavern | TikTok Feed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Outfit:wght@500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #010101;
+      --tiktok-pink: #ff0050;
+      --tiktok-cyan: #00f2fe;
+      --text: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --theme-color: var(--tiktok-pink);
+      --theme-glow: rgba(255, 0, 80, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      height: 1080px;
+      width: 1920px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Cinematic background grid */
+    .bg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(255, 0, 80, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.08) 0%, transparent 40%);
+      pointer-events: none;
+    }
+
+    .bg-grid {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: 2;
+      opacity: 0.5;
+    }
+
+    /* Main Container */
+    .container {
+      position: relative;
+      z-index: 10;
+      width: 90%;
+      height: 85%;
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    /* LEFT SIDE: 3D Phone Mockup */
+    .phone-column {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 1200px;
+    }
+
+    .phone-container {
+      width: 400px;
+      height: 800px;
+      background: #000;
+      border-radius: 40px;
+      padding: 12px;
+      position: relative;
+      border: 4px solid var(--glass-border);
+      box-shadow: 
+        0px 25px 50px -12px rgba(0, 0, 0, 0.7),
+        0 0 40px rgba(0, 242, 254, 0.1),
+        0 0 40px rgba(255, 0, 80, 0.1);
+      transform: rotateY(-12deg) rotateX(8deg);
+      transform-style: preserve-3d;
+      animation: float-phone 6s ease-in-out infinite alternate;
+    }
+
+    .phone-inner {
+      width: 100%;
+      height: 100%;
+      background: #111;
+      border-radius: 30px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Phone Speaker/Camera Notch */
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 25px;
+      background: #000;
+      border-bottom-left-radius: 18px;
+      border-bottom-right-radius: 18px;
+      z-index: 100;
+    }
+
+    /* Video Player */
+    .video-wrapper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: linear-gradient(45deg, #111, #222);
+    }
+
+    .video-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Animated CSS fallback when video is loading/offline */
+    .fallback-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, #1a1a2e 0%, #020205 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+    }
+
+    .fallback-logo {
+      width: 80px;
+      height: 80px;
+      filter: drop-shadow(3px 0px 0px var(--tiktok-cyan)) drop-shadow(-3px 0px 0px var(--tiktok-pink));
+      animation: heartbeat 1.5s ease-in-out infinite;
+    }
+
+    /* TikTok UI Overlay */
+    .tiktok-ui {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.5rem;
+      pointer-events: none;
+      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 30%);
+    }
+
+    .tiktok-sidebar {
+      position: absolute;
+      right: 12px;
+      bottom: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .sidebar-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #fff;
+    }
+
+    .sidebar-icon .icon-bg {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 1.3rem;
+    }
+
+    .sidebar-icon span {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+
+    .avatar-wrapper img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+    }
+
+    .avatar-wrapper .plus-btn {
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 18px;
+      height: 18px;
+      background: var(--tiktok-pink);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      border: 1px solid #fff;
+    }
+
+    .music-disc {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #333 30%, #111 80%);
+      border: 6px solid #222;
+      animation: rotate-disc 4s linear infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+
+    .music-disc::after {
+      content: '🎵';
+      font-size: 12px;
+    }
+
+    /* Captions & Info */
+    .tiktok-info {
+      max-width: 80%;
+      color: #fff;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+    }
+
+    .tiktok-user {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tiktok-user::after {
+      content: '✓';
+      background: #20d5ec;
+      color: #fff;
+      font-size: 8px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+    }
+
+    .tiktok-desc {
+      font-size: 0.85rem;
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+      white-space: normal;
+    }
+
+    .tiktok-tags {
+      color: var(--tiktok-cyan);
+      font-weight: 700;
+    }
+
+    .tiktok-music {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+    }
+
+    .tiktok-music marquee {
+      width: 150px;
+    }
+
+    /* RIGHT SIDE: Branding & Call-To-Action */
+    .cta-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+
+    .logo-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .logo-header svg {
+      width: 60px;
+      height: 60px;
+      filter: drop-shadow(2px 0px 0px var(--tiktok-cyan)) drop-shadow(-2px 0px 0px var(--tiktok-pink));
+    }
+
+    .logo-title-group h2 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .logo-title-group h1 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: 3.5rem;
+      background: linear-gradient(45deg, #fff 40%, #e2e8f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+    }
+
+    /* Stats Grid */
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+
+    .stat-card.followers::before { background: var(--tiktok-pink); }
+    .stat-card.likes::before { background: var(--tiktok-cyan); }
+
+    .stat-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    /* Main CTA Box with QR Code */
+    .qr-cta-box {
+      background: linear-gradient(135deg, rgba(255, 0, 80, 0.05) 0%, rgba(0, 242, 254, 0.05) 100%);
+      border: 2px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+      position: relative;
+    }
+
+    .qr-cta-box::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 24px;
+      background: linear-gradient(45deg, var(--tiktok-pink), var(--tiktok-cyan));
+      z-index: -1;
+      opacity: 0.3;
+      filter: blur(10px);
+    }
+
+    .qr-wrapper {
+      background: #fff;
+      padding: 12px;
+      border-radius: 20px;
+      flex-shrink: 0;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .qr-wrapper img {
+      width: 140px;
+      height: 140px;
+      display: block;
+    }
+
+    .qr-text-group h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(45deg, var(--tiktok-cyan), #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .qr-text-group p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Comments Section */
+    .comments-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .comment-pill {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      animation: pulse-border 4s infinite ease-in-out;
+    }
+
+    .comment-pill img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .comment-content {
+      flex: 1;
+    }
+
+    .comment-user {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--tiktok-cyan);
+      margin-bottom: 2px;
+    }
+
+    .comment-text {
+      font-size: 0.95rem;
+      color: #fff;
+    }
+
+    /* Floating Hearts Container */
+    .hearts-container {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 15;
+      pointer-events: none;
+    }
+
+    .floating-heart {
+      position: absolute;
+      bottom: 20px;
+      right: 50px;
+      font-size: 24px;
+      animation: rise-and-fade 2s ease-out forwards;
+      opacity: 0;
+    }
+
+    /* Animations */
+    @keyframes float-phone {
+      0% { transform: rotateY(-12deg) rotateX(8deg) translateY(0px); }
+      100% { transform: rotateY(-8deg) rotateX(10deg) translateY(-15px); }
+    }
+
+    @keyframes rotate-disc {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    @keyframes rise-and-fade {
+      0% {
+        transform: translateY(0) scale(0.5) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-300px) scale(1.2) translateX(var(--drift));
+        opacity: 0;
+      }
+    }
+
+    @keyframes pulse-border {
+      0%, 100% { border-color: var(--glass-border); }
+      50% { border-color: rgba(255, 0, 80, 0.25); }
+    }
+
+    marquee {
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-overlay"></div>
+<div class="bg-grid"></div>
+
+<div class="container">
+  
+  <!-- LEFT: 3D Phone Mockup -->
+  <div class="phone-column">
+    <div class="phone-container">
+      <div class="phone-inner">
+        <div class="phone-notch"></div>
+        
+        <div class="video-wrapper">
+          <!-- Fallback animated screen in case video fails -->
+          <div class="fallback-bg" id="fallback-bg">
+            <svg class="fallback-logo" viewBox="0 0 448 512" fill="#fff">
+              <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/>
+            </svg>
+            <div style="margin-top: 20px; font-weight:700; color:var(--text-muted); font-size:0.9rem; letter-spacing:1px;">PLAYING FEED...</div>
+          </div>
+          
+          <video id="tiktok-video" autoplay loop muted playsinline>
+            <source src="../cartoon_animate_thses_charac.mp4" type="video/mp4">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-girl-taking-a-selfie-with-her-phone-40000-large.mp4" type="video/mp4">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-friends-dancing-in-a-club-40502-large.mp4" type="video/mp4">
+          </video>
+
+          <!-- Floating Hearts Overlay -->
+          <div class="hearts-container" id="hearts-container"></div>
+
+          <!-- TikTok UI -->
+          <div class="tiktok-ui">
+            <!-- Sidebar Icons -->
+            <div class="tiktok-sidebar">
+              <div class="avatar-wrapper">
+                <img src="avatar.png" alt="Profile" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200'">
+                <div class="plus-btn">+</div>
+              </div>
+              <div class="sidebar-icon">
+                <div class="icon-bg">❤️</div>
+                <span id="video-likes">45.2K</span>
+              </div>
+              <div class="sidebar-icon">
+                <div class="icon-bg">💬</div>
+                <span>124</span>
+              </div>
+              <div class="sidebar-icon">
+                <div class="icon-bg">🔗</div>
+                <span>Share</span>
+              </div>
+              <div class="music-disc"></div>
+            </div>
+
+            <!-- Info / Caption -->
+            <div class="tiktok-info">
+              <div class="tiktok-user">coasterstavern</div>
+              <div class="tiktok-desc">
+                Weekend vibe check at Coasters! Cold beers, great crowds and live sport. Come say hi! 🍻✨
+                <span class="tiktok-tags">#coasterstavern #chch #pubgoals #fyp</span>
+              </div>
+              <div class="tiktok-music">
+                <span>🎵</span>
+                <marquee scrollamount="3">Coasters Tavern Original Audio - coasterstavern</marquee>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Call To Action and Metrics -->
+  <div class="cta-column">
+    
+    <!-- Branding Header -->
+    <div class="logo-header">
+      <svg viewBox="0 0 448 512" fill="#fff">
+        <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/>
+      </svg>
+      <div class="logo-title-group">
+        <h2>Follow Our Journey</h2>
+        <h1>COASTERS ON TIKTOK</h1>
+      </div>
+    </div>
+
+    <!-- Live Counter Cards -->
+    <div class="stats-row">
+      <div class="stat-card followers">
+        <div class="stat-val" id="followers-counter">4,280</div>
+        <div class="stat-label">Followers</div>
+      </div>
+      <div class="stat-card likes">
+        <div class="stat-val" id="likes-counter">92.4K</div>
+        <div class="stat-label">Total Likes</div>
+      </div>
+    </div>
+
+    <!-- Live QR Call-To-Action -->
+    <div class="qr-cta-box">
+      <div class="qr-wrapper">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&ecc=H&data=https://www.tiktok.com/@coasterstavernredwood" alt="TikTok QR">
+      </div>
+      <div class="qr-text-group">
+        <h3>SCAN TO FOLLOW</h3>
+        <p>Scan the code with your phone camera to watch our latest videos, behind-the-scenes fun, and special announcements!</p>
+      </div>
+    </div>
+
+    <!-- Trending Comments Section -->
+    <div class="comments-container">
+      <div class="comment-pill">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100" alt="User">
+        <div class="comment-content">
+          <div class="comment-user">@chch_local</div>
+          <div class="comment-text">The steak night deal is actually insane value. Highly recommend! 🔥</div>
+        </div>
+      </div>
+      <div class="comment-pill">
+        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100" alt="User">
+        <div class="comment-content">
+          <div class="comment-user">@foodie_nz</div>
+          <div class="comment-text">Best Sunday Roast in Christchurch by far! Super friendly staff too. 🙌</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // Hide fallback background when video starts playing
+  const video = document.getElementById('tiktok-video');
+  const fallback = document.getElementById('fallback-bg');
+  video.addEventListener('playing', () => {
+    fallback.style.display = 'none';
+  });
+
+  // Animated stats ticker
+  function animateCounter(id, target, suffix = '') {
+    const el = document.getElementById(id);
+    let current = 0;
+    const duration = 2000;
+    const stepTime = 30;
+    const steps = duration / stepTime;
+    const increment = target / steps;
+    
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        current = target;
+        clearInterval(timer);
+      }
+      if (target >= 1000 && suffix !== 'K') {
+        el.innerText = Math.round(current).toLocaleString();
+      } else {
+        el.innerText = current.toFixed(suffix === 'K' ? 1 : 0) + suffix;
+      }
+    }, stepTime);
+  }
+
+  // Run animations on load
+  window.onload = () => {
+    animateCounter('followers-counter', 4280);
+    animateCounter('likes-counter', 92.4, 'K');
+  };
+
+  // Floating Hearts Stream Generator
+  const hearts = ['❤️', '💖', '💕', '💘', '💙', '🔥', '✨'];
+  const container = document.getElementById('hearts-container');
+  
+  function spawnHeart() {
+    const heart = document.createElement('div');
+    heart.className = 'floating-heart';
+    heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
+    
+    // Randomize drift (horizontal swing) and animation duration
+    const drift = (Math.random() * 160 - 80) + 'px';
+    const duration = (Math.random() * 1.5 + 1.5) + 's';
+    
+    heart.style.setProperty('--drift', drift);
+    heart.style.animationDuration = duration;
+    
+    // Spawn near the heart sidebar button
+    heart.style.right = '28px';
+    heart.style.bottom = '160px';
+    
+    container.appendChild(heart);
+    
+    // Remove element after animation finishes
+    setTimeout(() => {
+      heart.remove();
+    }, 3000);
+  }
+
+  // Spawn hearts regularly to simulate active TikTok stream engagement
+  setInterval(spawnHeart, 600);
+
+  // Handle video carousel captions and sources rotation
+  const tiktokFeeds = [
+    {
+      likes: '45.2K',
+      desc: 'Weekend vibe check at Coasters! Cold beers, great crowds and live sport. Come say hi! 🍻✨',
+      tags: '#coasterstavern #chch #pubgoals #fyp',
+      audio: 'Coasters Tavern Original Audio - coasterstavern'
+    },
+    {
+      likes: '12.8K',
+      desc: 'Burger Day Thursday in full action! 🍔 Golden fries, onion rings, and your choice of 4 gourmet burgers for $22. Don\'t miss out!',
+      tags: '#burgerday #burgers #pubspecials #christchurchfood',
+      audio: 'Burger Day Theme - Coasters Kitchen'
+    },
+    {
+      likes: '34.1K',
+      desc: 'Meat Raffle time! 🥩 Winners take home premium butcher cuts. Draws happening every Friday from 5pm. Good luck!',
+      tags: '#meatraffle #localpub #pubgames #fridays',
+      audio: 'Friday Lucky Theme - Coasters Tavern'
+    }
+  ];
+
+  let currentFeedIndex = 0;
+  const likesEl = document.getElementById('video-likes');
+  const descEl = document.querySelector('.tiktok-desc');
+  const marqueeEl = document.querySelector('.tiktok-music marquee');
+
+  function rotateFeedData() {
+    currentFeedIndex = (currentFeedIndex + 1) % tiktokFeeds.length;
+    const feed = tiktokFeeds[currentFeedIndex];
+    
+    // Fade out elements briefly, change, and fade in
+    descEl.style.opacity = '0';
+    likesEl.style.opacity = '0';
+    
+    setTimeout(() => {
+      likesEl.innerText = feed.likes;
+      descEl.innerHTML = `${feed.desc} <span class="tiktok-tags">${feed.tags}</span>`;
+      marqueeEl.innerText = feed.audio;
+      
+      descEl.style.opacity = '1';
+      likesEl.style.opacity = '1';
+    }, 400);
+  }
+
+  // Rotate feed text metadata every 20 seconds (independent of video loop)
+  setInterval(rotateFeedData, 20000);
+</script>
+</body>
+</html>
