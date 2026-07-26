@@ -92,8 +92,8 @@
       max-width: 1480px;
       height: 88vh;
       display: grid;
-      grid-template-columns: 400px 1fr;
-      gap: 4.5rem;
+      grid-template-columns: 390px 1fr;
+      gap: 4rem;
       align-items: center;
       justify-content: center;
     }
@@ -114,8 +114,8 @@
     }
 
     .phone-frame {
-      width: 390px;
-      height: 760px;
+      width: 380px;
+      height: 750px;
       background: #000;
       border-radius: 44px;
       padding: 12px;
@@ -217,6 +217,7 @@
       font-size: 0.9rem;
       font-weight: 800;
       text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+      white-space: nowrap;
     }
 
     /* TikTok Logo Badge */
@@ -274,6 +275,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      white-space: nowrap;
     }
 
     .tiktok-user::after {
@@ -306,7 +308,7 @@
     .cta-column {
       display: flex;
       flex-direction: column;
-      gap: 2.8rem;
+      gap: 2.6rem;
     }
 
     .logo-header {
@@ -316,31 +318,34 @@
     }
 
     .logo-header svg {
-      width: 80px;
-      height: 80px;
+      width: 76px;
+      height: 76px;
+      flex-shrink: 0;
       filter: drop-shadow(3px 0px 0px var(--tiktok-cyan)) drop-shadow(-3px 0px 0px var(--tiktok-pink));
     }
 
     .logo-title-group h2 {
       font-family: 'Outfit', sans-serif;
       font-weight: 900;
-      font-size: 2rem;
+      font-size: 1.8rem;
       letter-spacing: 3px;
       color: var(--text-muted);
       text-transform: uppercase;
+      white-space: nowrap;
     }
 
     .logo-title-group h1 {
       font-family: 'Outfit', sans-serif;
       font-weight: 900;
-      font-size: 4.4rem;
+      font-size: 4.2rem;
       background: linear-gradient(45deg, #fff 40%, #e2e8f0 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       line-height: 1.05;
+      white-space: nowrap;
     }
 
-    /* TV Optimized Stats Grid - Large Legible Numbers */
+    /* Center-Aligned TV Stats Grid */
     .stats-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -351,10 +356,15 @@
       background: rgba(255, 255, 255, 0.04);
       border: 2px solid var(--glass-border);
       border-radius: 28px;
-      padding: 2.4rem;
+      padding: 2.4rem 1.5rem;
       position: relative;
       overflow: hidden;
       backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
 
     .stat-card::before {
@@ -376,18 +386,22 @@
       color: #fff;
       line-height: 1;
       letter-spacing: -1px;
+      text-align: center;
+      white-space: nowrap;
     }
 
     .stat-label {
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       font-weight: 800;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 2px;
       margin-top: 10px;
+      text-align: center;
+      white-space: nowrap;
     }
 
-    /* Scan QR Code Box - High Visibility */
+    /* Scan QR Code Box - High Visibility & No Awkward Wrap */
     .qr-cta-box {
       background: linear-gradient(135deg, rgba(255, 0, 80, 0.08) 0%, rgba(0, 242, 254, 0.08) 100%);
       border: 2px solid var(--glass-border);
@@ -408,24 +422,25 @@
     }
 
     .qr-wrapper img {
-      width: 155px;
-      height: 155px;
+      width: 150px;
+      height: 150px;
       display: block;
     }
 
     .qr-text-group h3 {
       font-family: 'Outfit', sans-serif;
-      font-size: 2.5rem;
+      font-size: 2.4rem;
       font-weight: 900;
       line-height: 1.15;
       margin-bottom: 0.6rem;
       background: linear-gradient(45deg, var(--tiktok-cyan), #fff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      white-space: nowrap;
     }
 
     .qr-text-group p {
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       color: var(--text-muted);
       line-height: 1.45;
       font-weight: 600;
@@ -505,7 +520,7 @@
         </div>
       </div>
 
-      <!-- High-Visibility TV Stats: Likes & Views ONLY -->
+      <!-- Center Aligned TV Stats: Likes & Views ONLY -->
       <div class="stats-row">
         <div class="stat-card likes">
           <div class="stat-val" id="counter-likes">0</div>
