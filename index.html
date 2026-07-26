@@ -89,11 +89,11 @@
       position: relative;
       z-index: 10;
       width: 100%;
-      max-width: 1480px;
+      max-width: 1540px;
       height: 88vh;
       display: grid;
-      grid-template-columns: 390px 1fr;
-      gap: 4rem;
+      grid-template-columns: 400px 1fr;
+      gap: 4.5rem;
       align-items: center;
       justify-content: center;
     }
@@ -114,8 +114,8 @@
     }
 
     .phone-frame {
-      width: 380px;
-      height: 750px;
+      width: 390px;
+      height: 760px;
       background: #000;
       border-radius: 44px;
       padding: 12px;
@@ -221,7 +221,6 @@
       margin-bottom: 4px;
       border: 1px solid rgba(255, 255, 255, 0.2);
       font-size: 1.4rem;
-      transition: transform 0.2s;
     }
 
     .sidebar-icon.like-btn .icon-bg {
@@ -240,7 +239,6 @@
       white-space: nowrap;
     }
 
-    /* TikTok Logo Badge with Pulsing Glow Animation */
     .profile-badge {
       width: 50px;
       height: 50px;
@@ -276,7 +274,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 10px rgba(0,0,0,0.8);
     }
 
     .music-disc::after {
@@ -363,22 +360,22 @@
       font-weight: 800;
     }
 
-    /* RIGHT SIDE: High-Legibility TV Branding, Stats & Centered QR Box */
+    /* RIGHT SIDE: Extra Large TV Typography & Spacious Layout */
     .cta-column {
       display: flex;
       flex-direction: column;
-      gap: 2.6rem;
+      gap: 2.8rem;
     }
 
     .logo-header {
       display: flex;
       align-items: center;
-      gap: 1.8rem;
+      gap: 2rem;
     }
 
     .logo-header svg {
-      width: 76px;
-      height: 76px;
+      width: 86px;
+      height: 86px;
       flex-shrink: 0;
       filter: drop-shadow(3px 0px 0px var(--tiktok-cyan)) drop-shadow(-3px 0px 0px var(--tiktok-pink));
     }
@@ -386,7 +383,7 @@
     .logo-title-group h2 {
       font-family: 'Outfit', sans-serif;
       font-weight: 900;
-      font-size: 1.8rem;
+      font-size: 2.2rem;
       letter-spacing: 3px;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -396,7 +393,7 @@
     .logo-title-group h1 {
       font-family: 'Outfit', sans-serif;
       font-weight: 900;
-      font-size: 4.2rem;
+      font-size: 4.8rem;
       background: linear-gradient(45deg, #fff 40%, #e2e8f0 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -408,14 +405,14 @@
     .stats-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2.2rem;
+      gap: 2.4rem;
     }
 
     .stat-card {
       background: rgba(255, 255, 255, 0.04);
       border: 2px solid var(--glass-border);
       border-radius: 28px;
-      padding: 2.4rem 1.5rem;
+      padding: 2.6rem 1.8rem;
       position: relative;
       overflow: hidden;
       backdrop-filter: blur(10px);
@@ -440,7 +437,7 @@
 
     .stat-val {
       font-family: 'Outfit', sans-serif;
-      font-size: 4.8rem;
+      font-size: 5.2rem;
       font-weight: 900;
       color: #fff;
       line-height: 1;
@@ -450,29 +447,28 @@
     }
 
     .stat-label {
-      font-size: 1.25rem;
+      font-size: 1.45rem;
       font-weight: 800;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 2px;
-      margin-top: 10px;
+      margin-top: 12px;
       text-align: center;
       white-space: nowrap;
     }
 
-    /* Centered Scan QR Code CTA Box */
+    /* Clean Centered QR Code Box without ugly text wrapping */
     .qr-cta-box {
       background: linear-gradient(135deg, rgba(255, 0, 80, 0.08) 0%, rgba(0, 242, 254, 0.08) 100%);
       border: 2px solid var(--glass-border);
       border-radius: 32px;
-      padding: 2.2rem 2rem;
+      padding: 2.4rem 2.8rem;
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 2.5rem;
+      gap: 3rem;
       box-shadow: 0 20px 45px rgba(0,0,0,0.6);
-      text-align: center;
     }
 
     .qr-wrapper {
@@ -484,8 +480,8 @@
     }
 
     .qr-wrapper img {
-      width: 140px;
-      height: 140px;
+      width: 155px;
+      height: 155px;
       display: block;
     }
 
@@ -498,10 +494,10 @@
 
     .qr-text-group h3 {
       font-family: 'Outfit', sans-serif;
-      font-size: 2.2rem;
+      font-size: 2.6rem;
       font-weight: 900;
       line-height: 1.15;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.6rem;
       background: linear-gradient(45deg, var(--tiktok-cyan), #fff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -509,10 +505,11 @@
     }
 
     .qr-text-group p {
-      font-size: 1.2rem;
+      font-size: 1.35rem;
       color: var(--text-muted);
       line-height: 1.45;
       font-weight: 600;
+      text-align: center;
     }
   </style>
 </head>
@@ -523,7 +520,7 @@
 
   <div class="container">
     
-    <!-- LEFT SIDE: Mobile Phone Display -->
+    <!-- LEFT SIDE: Animated Mobile Phone Display -->
     <div class="phone-column">
       <div class="phone-frame">
         <div class="phone-inner">
