@@ -668,8 +668,11 @@
       views: document.getElementById('counter-views')
     };
 
-    const slideDuration = 30000; // 30 seconds
+    let slideDuration = 30000; // 30 seconds
     let startTime = Date.now();
+    let isPaused = false;
+    let isLocked = false;
+    let pauseTime = 0;
 
     function formatNum(val) {
       if (val >= 10000) {
@@ -679,24 +682,111 @@
     }
 
     function animateSlideCycle() {
-      const now = Date.now();
-      let elapsed = (now - startTime) % slideDuration;
-      let progress = elapsed / slideDuration;
+      if (!isPaused && !isLocked) {
+        const now = Date.now();
+        let elapsed = now - startTime;
+        if (elapsed >= slideDuration) {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'SKIP_MODULE' }, '*');
+          }
+          startTime = Date.now();
+          elapsed = 0;
+        }
+        let progress = Math.min(1, elapsed / slideDuration);
 
-      // Update bottom ct-matrix progress bar (0% -> 100% over 30s)
-      document.getElementById('bottom-progress-fill').style.width = (progress * 100) + '%';
+        // Update bottom ct-matrix progress bar (0% -> 100% over slideDuration)
+        const bar = document.getElementById('bottom-progress-fill');
+        if (bar) bar.style.width = (progress * 100) + '%';
 
-      // Increment counters up to their exact real target values without exceeding them
-      for (const key in realTargets) {
-        const target = realTargets[key];
-        const currentValue = Math.min(target, target * progress);
-        elements[key].innerText = formatNum(currentValue);
+        // Increment counters up to their exact real target values without exceeding them
+        for (const key in realTargets) {
+          const target = realTargets[key];
+          const currentValue = Math.min(target, target * progress);
+          if (elements[key]) elements[key].innerText = formatNum(currentValue);
+        }
       }
 
       requestAnimationFrame(animateSlideCycle);
     }
 
     requestAnimationFrame(animateSlideCycle);
+
+    function showHudToast(text) {
+      let toast = document.getElementById('kb-hud-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'kb-hud-toast';
+        toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:rgba(0,0,0,0.85);color:#fff;border:1px solid rgba(255,255,255,0.25);padding:10px 18px;border-radius:10px;font-size:15px;font-weight:600;z-index:99999;box-shadow:0 8px 24px rgba(0,0,0,0.6);letter-spacing:0.5px;pointer-events:none;transition:opacity 0.2s ease;';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = text;
+      toast.style.opacity = '1';
+      clearTimeout(toast._timeout);
+      toast._timeout = setTimeout(() => { toast.style.opacity = '0'; }, 1600);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      const activeTag = (document.activeElement?.tagName || '').toLowerCase();
+      if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select' || document.activeElement?.isContentEditable) return;
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        startTime = Date.now();
+        showHudToast('Restart Slide');
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'SKIP_MODULE' }, '*');
+        }
+        showHudToast('Next Module');
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        startTime = Date.now();
+        showHudToast('Restart Module');
+      } else if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        isPaused = !isPaused;
+        const vid = document.getElementById('auto-feed-video');
+        if (isPaused) {
+          pauseTime = Date.now();
+          if (vid) vid.pause();
+        } else {
+          startTime += (Date.now() - pauseTime);
+          if (vid) vid.play().catch(() => {});
+        }
+        showHudToast(isPaused ? 'Paused' : 'Playing');
+      } else if (e.key === 'a' || e.key === 'A') {
+        e.preventDefault();
+        window.open('admin.html', '_blank');
+      } else if (e.key === 'r' || e.key === 'R') {
+        e.preventDefault();
+        window.open('remote.html', '_blank');
+      } else if (e.key >= '1' && e.key <= '9') {
+        e.preventDefault();
+        const secs = parseInt(e.key, 10) * 10;
+        slideDuration = secs * 1000;
+        startTime = Date.now();
+        showHudToast(`Speed: ${secs}s`);
+      } else if (e.key === '0') {
+        e.preventDefault();
+        isLocked = !isLocked;
+        if (isLocked) {
+          pauseTime = Date.now();
+        } else {
+          startTime += (Date.now() - pauseTime);
+        }
+        showHudToast(isLocked ? 'Slide Locked' : 'Slide Unlocked');
+      }
+    });
+
+    window.addEventListener('message', (e) => {
+      if (!e.data) return;
+      if (e.data.type === 'SKIP_MODULE') {
+        if (window.parent && window.parent !== window) window.parent.postMessage({ type: 'SKIP_MODULE' }, '*');
+      } else if (e.data.type === 'GOTO_FIRST') {
+        startTime = Date.now();
+      }
+    });
   </script>
 </body>
 </html>
