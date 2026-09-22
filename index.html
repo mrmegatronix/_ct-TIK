@@ -687,7 +687,7 @@
         let elapsed = now - startTime;
         if (elapsed >= slideDuration) {
           if (window.parent && window.parent !== window) {
-            window.parent.postMessage({ type: 'SKIP_MODULE' }, '*');
+            window.parent.postMessage({ type: 'NEXT_SLIDE' }, '*');
           }
           startTime = Date.now();
           elapsed = 0;
@@ -732,8 +732,13 @@
       if (e.key === 'ArrowLeft') {
         e.preventDefault();
         startTime = Date.now();
-        showHudToast('Restart Slide');
-      } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'NEXT_SLIDE' }, '*');
+        }
+        showHudToast('Next Slide');
+      } else if (e.key === 'ArrowDown') {
         e.preventDefault();
         if (window.parent && window.parent !== window) {
           window.parent.postMessage({ type: 'SKIP_MODULE' }, '*');
