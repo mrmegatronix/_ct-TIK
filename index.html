@@ -396,8 +396,10 @@
       background: linear-gradient(45deg, #fff 40%, #e2e8f0 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      line-height: 1.05;
+      line-height: 1.2;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     /* Center-Aligned TV Stats Grid */
@@ -439,10 +441,12 @@
       font-size: 5.2rem;
       font-weight: 900;
       color: #fff;
-      line-height: 1;
+      line-height: 1.15;
       letter-spacing: -1px;
       text-align: center;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .stat-label {
@@ -497,12 +501,14 @@
       font-family: 'Outfit', sans-serif;
       font-size: 4rem;
       font-weight: 900;
-      line-height: 1.05;
+      line-height: 1.2;
       margin-bottom: 0.8rem;
       background: linear-gradient(45deg, var(--tiktok-cyan), #fff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .qr-text-group p {
